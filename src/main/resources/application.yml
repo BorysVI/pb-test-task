@@ -1,0 +1,12 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: pb_test_task
+  docker:
+    compose:
+      lifecycle-management: start-only
+
+logging:
+  level:
+    com.example.pb_test_task: DEBUG

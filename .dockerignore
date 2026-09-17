@@ -1,0 +1,8 @@
+target/
+src/test/
+.git/
+.idea/
+.claude/
+*.iml
+*.md
+*compose*.yml
