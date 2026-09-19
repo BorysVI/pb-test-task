@@ -6,6 +6,14 @@ spring:
   docker:
     compose:
       lifecycle-management: start-only
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+
+orders:
+  daily-limit: 50000.00
+  time-zone: Europe/Kyiv
 
 logging:
   level:
