@@ -34,9 +34,5 @@ public class ClientDailyLimit {
     @Column(nullable = false)
     private BigDecimal reserved;
 
-    public record Key(UUID clientId, LocalDate businessDay) implements Serializable {
-        public Key() {
-            this(null, null);
-        }
-    }
+    public record Key(UUID clientId, LocalDate businessDay) implements Serializable {}
 }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 public interface OrderRepository extends JpaRepository<Order, UUID> {
@@ -27,4 +28,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("UPDATE Order o SET o.limitReleased = true WHERE o.id = :id AND o.limitReleased = false")
     int markLimitReleased(@Param("id") UUID id);
+
+    @Query("SELECT o FROM Order o WHERE o.status = 'PROCESSING' AND o.updatedAt < :threshold")
+    List<Order> findStuckInProcessing(@Param("threshold") Instant threshold);
 }

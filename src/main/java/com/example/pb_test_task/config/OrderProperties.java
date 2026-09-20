@@ -19,7 +19,8 @@ public record OrderProperties(
         @NotNull @Positive @Digits(integer = 17, fraction = 2) BigDecimal dailyLimit,
         @NotNull ZoneId timeZone,
         @NotNull @Valid Provider provider,
-        @NotNull @Valid Outbox outbox
+        @NotNull @Valid Outbox outbox,
+        @NotNull @Valid Reaper reaper
 ) {
     public record Provider(
             @NotNull Duration timeout,
@@ -34,5 +35,10 @@ public record OrderProperties(
             @NotNull Duration pollInterval,
             @NotNull Duration confirmTimeout,
             @NotNull @Positive Integer batchSize
+    ) {}
+
+    public record Reaper(
+            @NotNull Duration interval,
+            @NotNull Duration threshold
     ) {}
 }

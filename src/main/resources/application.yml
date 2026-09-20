@@ -38,6 +38,9 @@ orders:
     poll-interval: 200ms
     confirm-timeout: 5s
     batch-size: 100
+  reaper:
+    interval: 10s
+    threshold: 1m
 
 logging:
   level:
