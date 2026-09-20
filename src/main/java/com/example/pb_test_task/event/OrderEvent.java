@@ -27,11 +27,11 @@ public record OrderEvent(
 
     public String routingKey() {
         return switch (toStatus) {
-            case NEW -> "order.created";
-            case PROCESSING -> "order.processing";
-            case COMPLETED -> "order.completed";
-            case FAILED -> "order.failed";
-            case CANCELLED -> "order.cancelled";
+            case NEW -> OrderRoutingKey.CREATED;
+            case PROCESSING -> OrderRoutingKey.PROCESSING_STARTED;
+            case COMPLETED -> OrderRoutingKey.COMPLETED;
+            case FAILED -> OrderRoutingKey.FAILED;
+            case CANCELLED -> OrderRoutingKey.CANCELLED;
         };
     }
 }

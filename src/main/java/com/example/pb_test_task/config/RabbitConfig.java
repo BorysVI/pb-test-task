@@ -1,5 +1,6 @@
 package com.example.pb_test_task.config;
 
+import com.example.pb_test_task.event.OrderRoutingKey;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -19,7 +20,6 @@ public class RabbitConfig {
     public static final String PROCESSING_QUEUE = "q.orders.processing";
     public static final String EVENTS_QUEUE = "q.orders.events";
     public static final String DEAD_LETTER_QUEUE = "q.orders.processing.dlq";
-    public static final String ORDER_CREATED_KEY = "order.created";
 
     @Bean
     MessageConverter jsonMessageConverter(JsonMapper jsonMapper) {
@@ -40,7 +40,7 @@ public class RabbitConfig {
     Queue processingQueue() {
         return QueueBuilder.durable(PROCESSING_QUEUE)
                 .deadLetterExchange(DEAD_LETTER_EXCHANGE)
-                .deadLetterRoutingKey(ORDER_CREATED_KEY)
+                .deadLetterRoutingKey(OrderRoutingKey.CREATED)
                 .build();
     }
 
@@ -56,12 +56,12 @@ public class RabbitConfig {
 
     @Bean
     Binding processingBinding(Queue processingQueue, TopicExchange ordersExchange) {
-        return BindingBuilder.bind(processingQueue).to(ordersExchange).with(ORDER_CREATED_KEY);
+        return BindingBuilder.bind(processingQueue).to(ordersExchange).with(OrderRoutingKey.CREATED);
     }
 
     @Bean
     Binding eventsBinding(Queue eventsQueue, TopicExchange ordersExchange) {
-        return BindingBuilder.bind(eventsQueue).to(ordersExchange).with("order.#");
+        return BindingBuilder.bind(eventsQueue).to(ordersExchange).with(OrderRoutingKey.ANY);
     }
 
     @Bean
