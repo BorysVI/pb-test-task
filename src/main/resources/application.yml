@@ -14,6 +14,13 @@ spring:
 orders:
   daily-limit: 50000.00
   time-zone: Europe/Kyiv
+  provider:
+    timeout: 2s
+    max-retries: 2
+    retry-delay: 200ms
+    success-rate: 0.60
+    server-error-rate: 0.25
+    hang-duration: 11s
 
 logging:
   level:

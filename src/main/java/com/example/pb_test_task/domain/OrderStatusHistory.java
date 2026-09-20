@@ -42,5 +42,4 @@ public class OrderStatusHistory {
 
     @Column(nullable = false)
     private Instant createdAt;
-
 }

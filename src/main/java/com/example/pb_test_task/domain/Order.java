@@ -23,7 +23,6 @@ import static java.util.UUID.randomUUID;
 public class Order implements Persistable<UUID> {
 
     @Id
-    @Getter
     private UUID id;
 
     @Column(nullable = false)
@@ -72,7 +71,20 @@ public class Order implements Persistable<UUID> {
     }
 
     @Override
+    public UUID getId() {
+        return id;
+    }
+
+    @Override
     public boolean isNew() {
         return newlyCreated;
+    }
+
+    public boolean isLimitReleased() {
+        return limitReleased;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 }

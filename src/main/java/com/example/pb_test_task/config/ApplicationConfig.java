@@ -7,6 +7,7 @@ import org.springframework.resilience.annotation.EnableResilientMethods;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.time.Clock;
+import java.util.random.RandomGenerator;
 
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(OrderProperties.class)
@@ -17,5 +18,10 @@ public class ApplicationConfig {
     @Bean
     public Clock clock(OrderProperties properties) {
         return Clock.system(properties.timeZone());
+    }
+
+    @Bean
+    public RandomGenerator randomGenerator() {
+        return RandomGenerator.getDefault();
     }
 }
