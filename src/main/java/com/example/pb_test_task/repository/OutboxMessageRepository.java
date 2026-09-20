@@ -9,8 +9,11 @@ import org.springframework.data.repository.query.Param;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 public interface OutboxMessageRepository extends JpaRepository<OutboxMessage, Long> {
+
+    List<OutboxMessage> findByAggregateIdOrderByIdAsc(UUID aggregateId);
 
     @Query(value = """
             SELECT * FROM outbox_message

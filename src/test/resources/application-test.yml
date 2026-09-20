@@ -1,0 +1,20 @@
+spring:
+  docker:
+    compose:
+      enabled: false
+
+orders:
+  provider:
+    timeout: 2s
+    max-retries: 2
+    retry-delay: 50ms
+  outbox:
+    poll-interval: 100ms
+    batch-size: 100
+  reaper:
+    interval: 1s
+    threshold: 30s
+
+logging:
+  level:
+    org.springframework.amqp: WARN
