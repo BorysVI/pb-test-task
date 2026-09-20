@@ -42,4 +42,14 @@ public class OrderStatusHistory {
 
     @Column(nullable = false)
     private Instant createdAt;
+
+    public static OrderStatusHistory of(UUID orderId, OrderStatus from, OrderStatus to, String reason, Instant now) {
+        OrderStatusHistory entry = new OrderStatusHistory();
+        entry.orderId = orderId;
+        entry.fromStatus = from;
+        entry.toStatus = to;
+        entry.reason = reason;
+        entry.createdAt = now;
+        return entry;
+    }
 }

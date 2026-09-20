@@ -18,7 +18,8 @@ import java.time.ZoneId;
 public record OrderProperties(
         @NotNull @Positive @Digits(integer = 17, fraction = 2) BigDecimal dailyLimit,
         @NotNull ZoneId timeZone,
-        @NotNull @Valid Provider provider
+        @NotNull @Valid Provider provider,
+        @NotNull @Valid Outbox outbox
 ) {
     public record Provider(
             @NotNull Duration timeout,
@@ -27,5 +28,11 @@ public record OrderProperties(
             @NotNull @DecimalMin("0.0") @DecimalMax("1.0") Double successRate,
             @NotNull @DecimalMin("0.0") @DecimalMax("1.0") Double serverErrorRate,
             @NotNull Duration hangDuration
+    ) {}
+
+    public record Outbox(
+            @NotNull Duration pollInterval,
+            @NotNull Duration confirmTimeout,
+            @NotNull @Positive Integer batchSize
     ) {}
 }

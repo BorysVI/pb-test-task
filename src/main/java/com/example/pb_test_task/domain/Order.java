@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Persistable;
 
 import java.math.BigDecimal;
@@ -16,8 +17,11 @@ import java.util.UUID;
 
 import static jakarta.persistence.EnumType.STRING;
 import static java.util.UUID.randomUUID;
+import static lombok.AccessLevel.NONE;
+import static lombok.AccessLevel.PROTECTED;
 
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 @Entity
 @Table(name = "orders")
 public class Order implements Persistable<UUID> {
@@ -51,10 +55,8 @@ public class Order implements Persistable<UUID> {
     private Instant updatedAt;
 
     @Transient
+    @Getter(NONE)
     private boolean newlyCreated;
-
-    protected Order() {
-    }
 
     public static Order create(UUID clientId, BigDecimal amount, LocalDate businessDay, Instant now) {
         Order order = new Order();
@@ -71,20 +73,7 @@ public class Order implements Persistable<UUID> {
     }
 
     @Override
-    public UUID getId() {
-        return id;
-    }
-
-    @Override
     public boolean isNew() {
         return newlyCreated;
-    }
-
-    public boolean isLimitReleased() {
-        return limitReleased;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
     }
 }

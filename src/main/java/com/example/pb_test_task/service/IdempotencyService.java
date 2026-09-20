@@ -19,10 +19,6 @@ public class IdempotencyService {
 
     private final IdempotencyRecordRepository repository;
 
-    /**
-     * Serializes concurrent requests carrying the same key for the rest of the transaction, so the
-     * second one observes the first one's committed record instead of racing it into a duplicate insert.
-     */
     @Transactional(propagation = MANDATORY)
     public Optional<IdempotencyRecord> lockAndFind(UUID key, String fingerprint) {
         repository.acquireTransactionLock(key.getMostSignificantBits() ^ key.getLeastSignificantBits());

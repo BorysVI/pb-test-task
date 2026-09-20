@@ -33,4 +33,15 @@ public interface ClientDailyLimitRepository extends JpaRepository<ClientDailyLim
     int tryReserve(@Param("clientId") UUID clientId,
                    @Param("businessDay") LocalDate businessDay,
                    @Param("amount") BigDecimal amount);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = """
+            UPDATE client_daily_limit
+               SET reserved = reserved - :amount
+             WHERE client_id = :clientId
+               AND business_day = :businessDay
+            """, nativeQuery = true)
+    void release(@Param("clientId") UUID clientId,
+                @Param("businessDay") LocalDate businessDay,
+                @Param("amount") BigDecimal amount);
 }

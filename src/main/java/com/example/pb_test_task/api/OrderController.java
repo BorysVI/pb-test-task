@@ -6,6 +6,8 @@ import com.example.pb_test_task.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -33,5 +35,15 @@ public class OrderController {
                                                 @Valid @RequestBody CreateOrderRequest request) {
         OrderService.CreateResult result = orderService.create(idempotencyKey, request.clientId(), request.amount());
         return status(result.idempotentReplay() ? OK : CREATED).body(OrderResponse.of(result.order()));
+    }
+
+    @GetMapping("/{id}")
+    public OrderResponse get(@PathVariable UUID id) {
+        return OrderResponse.of(orderService.find(id));
+    }
+
+    @PostMapping("/{id}/cancel")
+    public OrderResponse cancel(@PathVariable UUID id) {
+        return OrderResponse.of(orderService.cancel(id));
     }
 }

@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,7 +16,7 @@ import java.util.UUID;
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
-@RequiredArgsConstructor(access = PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 @Entity
 @Table(name = "client_daily_limit")
 @IdClass(ClientDailyLimit.Key.class)

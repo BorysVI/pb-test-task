@@ -10,6 +10,19 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: validate
+  rabbitmq:
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    listener:
+      simple:
+        default-requeue-rejected: false
+        acknowledge-mode: auto
+        prefetch: 10
+        concurrency: 4
+        max-concurrency: 16
+  threads:
+    virtual:
+      enabled: true
 
 orders:
   daily-limit: 50000.00
@@ -21,6 +34,10 @@ orders:
     success-rate: 0.60
     server-error-rate: 0.25
     hang-duration: 11s
+  outbox:
+    poll-interval: 200ms
+    confirm-timeout: 5s
+    batch-size: 100
 
 logging:
   level:
