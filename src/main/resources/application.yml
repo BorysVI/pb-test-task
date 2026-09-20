@@ -41,6 +41,8 @@ orders:
   reaper:
     interval: 10s
     threshold: 1m
+    new-threshold: 2m
+    give-up-after: 30m
 
 logging:
   level:

@@ -31,4 +31,17 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     @Query("SELECT o FROM Order o WHERE o.status = 'PROCESSING' AND o.updatedAt < :threshold")
     List<Order> findStuckInProcessing(@Param("threshold") Instant threshold);
+
+    @Query("SELECT o FROM Order o WHERE o.status = 'NEW' AND o.updatedAt < :threshold")
+    List<Order> findStuckInNew(@Param("threshold") Instant threshold);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("""
+            UPDATE Order o
+               SET o.updatedAt = :now
+             WHERE o.id = :id AND o.status = 'NEW' AND o.updatedAt < :threshold
+            """)
+    int claimForRedrive(@Param("id") UUID id,
+                        @Param("threshold") Instant threshold,
+                        @Param("now") Instant now);
 }

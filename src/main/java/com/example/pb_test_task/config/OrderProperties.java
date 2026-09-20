@@ -39,6 +39,8 @@ public record OrderProperties(
 
     public record Reaper(
             @NotNull Duration interval,
-            @NotNull Duration threshold
+            @NotNull Duration threshold,
+            @NotNull Duration newThreshold,
+            @NotNull Duration giveUpAfter
     ) {}
 }

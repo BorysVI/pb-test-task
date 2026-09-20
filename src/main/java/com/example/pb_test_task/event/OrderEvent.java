@@ -1,5 +1,6 @@
 package com.example.pb_test_task.event;
 
+import com.example.pb_test_task.domain.Order;
 import com.example.pb_test_task.domain.OrderStatus;
 
 import java.math.BigDecimal;
@@ -15,6 +16,11 @@ public record OrderEvent(
         String reason,
         Instant occurredAt
 ) {
+    public static OrderEvent created(Order order, Instant occurredAt) {
+        return new OrderEvent(order.getId(), order.getClientId(), order.getAmount(),
+                null, OrderStatus.NEW, null, occurredAt);
+    }
+
     public String eventType() {
         return switch (toStatus) {
             case NEW -> "OrderCreated";
