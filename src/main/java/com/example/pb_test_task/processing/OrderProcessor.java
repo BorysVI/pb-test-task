@@ -13,6 +13,11 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.example.pb_test_task.domain.OrderStatus.COMPLETED;
+import static com.example.pb_test_task.domain.OrderStatus.FAILED;
+import static com.example.pb_test_task.domain.OrderStatus.NEW;
+import static com.example.pb_test_task.domain.OrderStatus.PROCESSING;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -32,15 +37,28 @@ public class OrderProcessor {
         Order order = claimed.get();
         try {
             String reference = providerClient.charge(order.getId(), order.getClientId(), order.getAmount());
-            transitionService.transition(order, OrderStatus.PROCESSING, OrderStatus.COMPLETED, reference);
+            settle(order, COMPLETED, reference);
         } catch (ProviderException e) {
-            log.info("Order {} failed at the provider: {}", orderId, e.getMessage());
-            transitionService.transition(order, OrderStatus.PROCESSING, OrderStatus.FAILED, e.getMessage());
+            log.warn("Order {} failed at the provider: {}", orderId, e.getMessage());
+            settle(order, FAILED, e.getMessage());
         }
     }
 
     private Optional<Order> claim(UUID orderId) {
         return orderRepository.findById(orderId)
-                .filter(order -> transitionService.transition(order, OrderStatus.NEW, OrderStatus.PROCESSING, null));
+                .filter(order -> transitionService.transition(order, NEW, PROCESSING, null));
+    }
+
+    private void settle(Order order, OrderStatus outcome, String reason) {
+        if (transitionService.transition(order, PROCESSING, outcome, reason)) {
+            return;
+        }
+        if (outcome == COMPLETED) {
+            log.error("Order {} was charged ({}) but had already left PROCESSING; needs reconciliation",
+                    order.getId(), reason);
+        } else {
+            log.warn("Order {} had already left PROCESSING before the failure was recorded: {}",
+                    order.getId(), reason);
+        }
     }
 }

@@ -24,7 +24,7 @@ import static org.springframework.transaction.annotation.Propagation.MANDATORY;
 @Service
 public class OrderTransitionService {
 
-    private static final Set<OrderStatus> RELEASES_LIMIT = EnumSet.of(FAILED, CANCELLED);
+    private static final Set<OrderStatus> RELEASES_LIMIT_STATUSES = EnumSet.of(FAILED, CANCELLED);
 
     private final OrderRepository orderRepository;
     private final OrderStatusHistoryRepository historyRepository;
@@ -39,7 +39,7 @@ public class OrderTransitionService {
             return false;
         }
         recordTransition(order, from, to, reason, now);
-        if (RELEASES_LIMIT.contains(to)) {
+        if (RELEASES_LIMIT_STATUSES.contains(to)) {
             dailyLimitService.releaseOnce(order);
         }
         return true;

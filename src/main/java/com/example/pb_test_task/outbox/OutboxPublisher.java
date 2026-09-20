@@ -1,7 +1,6 @@
 package com.example.pb_test_task.outbox;
 
 import com.example.pb_test_task.config.OrderProperties;
-import com.example.pb_test_task.config.RabbitConfig;
 import com.example.pb_test_task.domain.OutboxMessage;
 import com.example.pb_test_task.repository.OutboxMessageRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Clock;
 import java.util.List;
 
+import static com.example.pb_test_task.config.RabbitConfig.EXCHANGE;
 import static java.lang.Boolean.TRUE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.amqp.core.MessageDeliveryMode.PERSISTENT;
@@ -37,7 +37,7 @@ public class OutboxPublisher {
             return;
         }
         boolean confirmed = TRUE.equals(rabbitTemplate.invoke(operations -> {
-            batch.forEach(message -> operations.send(RabbitConfig.EXCHANGE, message.getRoutingKey(), toAmqp(message)));
+            batch.forEach(message -> operations.send(EXCHANGE, message.getRoutingKey(), toAmqp(message)));
             return operations.waitForConfirms(properties.outbox().confirmTimeout().toMillis());
         }));
         if (!confirmed) {
