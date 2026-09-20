@@ -7,6 +7,7 @@ import org.springframework.resilience.annotation.EnableResilientMethods;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.time.Clock;
+import java.util.Random;
 import java.util.random.RandomGenerator;
 
 @Configuration(proxyBeanMethods = false)
@@ -22,6 +23,6 @@ public class ApplicationConfig {
 
     @Bean
     public RandomGenerator randomGenerator() {
-        return RandomGenerator.getDefault();
+        return new Random();
     }
 }
